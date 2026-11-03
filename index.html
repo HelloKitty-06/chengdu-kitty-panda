@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成都熊猫旅行局 · 会动的成都文化小站</title>
+<meta name="description" content="成都熊猫旅行局：熊猫基地、宽窄巷子、火锅串串与盖碗茶——手绘景点地图、美食攻略、市井烟火和成都印象影片，一本会动的可爱文化手账。">
+<meta name="theme-color" content="#ffb3c9">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='54' r='34' fill='%23fffdf8'/%3E%3Ccircle cx='26' cy='28' r='13' fill='%234d3d49'/%3E%3Ccircle cx='74' cy='28' r='13' fill='%234d3d49'/%3E%3Cellipse cx='38' cy='52' rx='9' ry='12' fill='%234d3d49'/%3E%3Cellipse cx='62' cy='52' rx='9' ry='12' fill='%234d3d49'/%3E%3Ccircle cx='38' cy='51' r='4' fill='%23fff'/%3E%3Ccircle cx='62' cy='51' r='4' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-loading">
+
+<!-- ============================================================
+     组件 01：Loading 加载屏（竹节进度条 + 轮播文案）
+============================================================ -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-box">
+    <div class="loader-panda"><img src="images/panda-head.svg" alt="" aria-hidden="true"></div>
+    <div class="loader-bar"><i class="loader-fill" id="loaderFill"></i></div>
+    <p class="loader-text" id="loaderText">正在铺开成都手账…</p>
+    <p class="loader-sub">CHENGDU PANDA TRAVEL BUREAU</p>
+  </div>
+</div>
+
+<!-- 固定背景装饰层：云朵 / 星星 / 蝴蝶结 / 爪印（JS 生成，纯装饰） -->
+<div class="bg-deco" id="bgDeco" aria-hidden="true"></div>
+<!-- 竹叶飘落层（JS 生成，pointer-events:none，不阻挡交互） -->
+<div class="leaf-layer" id="leafLayer" aria-hidden="true"></div>
+
+<!-- ============================================================
+     组件 02：顶部导航（Logo + 锚点 + 收藏计数 + 汉堡菜单）
+============================================================ -->
+<header class="nav" id="navBar">
+  <div class="nav-inner container">
+    <a class="logo" href="#hero">
+      <span class="logo-badge"><img src="images/panda-head.svg" alt="" aria-hidden="true"></span>
+      <span class="logo-text"><b>成都熊猫旅行局</b><i>CHENGDU PANDA TRAVEL BUREAU</i></span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="页面导航">
+      <a class="nav-link is-active" href="#hero">首页</a>
+      <a class="nav-link" href="#life">市井烟火</a>
+      <a class="nav-link" href="#spots">景点地图</a>
+      <a class="nav-link" href="#food">美食手账</a>
+      <a class="nav-link" href="#film">宣传影片</a>
+    </nav>
+    <div class="nav-tools">
+      <span class="nav-fav" title="我的收藏"><svg class="ico-heart" viewBox="0 0 32 30" aria-hidden="true"><use href="#kx-heart"/></svg><b id="favCount">0</b></span>
+      <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<!-- ============================================================
+     组件 03：Hero 故事区（标题 + 可戳吉祥物 + 手账贴纸装饰）
+============================================================ -->
+<section class="hero" id="hero">
+  <div class="container hero-inner">
+    <div class="hero-copy">
+      <span class="hero-kicker reveal">🐼 熊猫局长亲自营业 · 成都认证可爱</span>
+      <h1 class="hero-title reveal" style="--d:.06s">你好呀，这里是<br><span class="accent">成都熊猫</span>的<em>旅行局</em></h1>
+      <p class="hero-sub reveal" style="--d:.12s">一本会动的旅行手账：竹叶信纸、盖碗茶印章、火锅味的贴纸——<br>和普通大熊猫一起，把慢生活的成都装进口袋。</p>
+      <div class="hero-cta reveal" style="--d:.18s">
+        <a class="btn btn-primary" href="#film">🎬 看成都印象影片</a>
+        <a class="btn btn-ghost" href="#life">🏮 逛逛市井烟火</a>
+      </div>
+      <ul class="hero-stats reveal" style="--d:.24s">
+        <li class="stat-chip"><b>10</b><span>座城市地标</span></li>
+        <li class="stat-chip"><b>5</b><span>碗地道美食</span></li>
+        <li class="stat-chip"><b>1</b><span>只普通大熊猫</span></li>
+      </ul>
+    </div>
+    <div class="hero-art reveal" style="--d:.15s">
+      <span class="hero-halo" aria-hidden="true"></span>
+      <button class="hero-panda" id="heroPanda" aria-label="戳一戳普通大熊猫">
+        <img src="images/panda-head.svg" alt="" aria-hidden="true">
+      </button>
+      <span class="hero-bubble" id="heroBubble">戳我一下嘛 (＾▽＾)</span>
+      <span class="hero-sticker s1" aria-hidden="true">🎋</span>
+      <span class="hero-sticker s2" aria-hidden="true">🍵</span>
+      <span class="hero-sticker s3" aria-hidden="true">✨</span>
+      <span class="hero-cloud c1" aria-hidden="true"><img src="images/cloud.svg" alt="" aria-hidden="true"></span>
+      <span class="hero-cloud c2" aria-hidden="true"><img src="images/cloud.svg" alt="" aria-hidden="true"></span>
+    </div>
+  </div>
+  <div class="hero-ground" aria-hidden="true"></div>
+  <div class="hero-scrollhint" aria-hidden="true"><i class="paw-ico"><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg></i><span>往下翻，开始旅行</span></div>
+</section>
+
+<!-- 组件 04：贴纸跑马灯 -->
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<!-- ============================================================
+     组件 04：市井烟火（新增板块 · 6 处生活实拍卡片网格）
+============================================================ -->
+<section class="section sec-life" id="life">
+  <span class="sec-sticker" aria-hidden="true">🏮</span>
+  <div class="container">
+    <header class="sec-head reveal">
+      <span class="sec-tag"><i class="dot"></i>LIFE 路 成都烟火</span>
+      <h2 class="sec-title">慢下来，看见最生活的成都</h2>
+      <p class="sec-sub">公园里的盖碗茶、巷子口的炭火串串、夜市里的霓虹灯笼——<br>这些不在导游词里的瞬间，才是成都最活色生香的样子。</p>
+    </header>
+    <div class="life-grid">
+      <article class="life-card reveal" style="--d:.04s">
+        <div class="life-img"><img src="images/scene-renmin-park.jpg" alt="人民公园" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">🌳 人民公园</span>
+          <h3 class="life-title">喝盖碗茶，晒下午茶</h3>
+          <p class="life-desc">成都人最爱的"户外客厅"，竹椅、盖碗、耳朵刮风，时间在这里变得格外漫长。</p>
+          <span class="life-note">📍 青羊区 · 免费入园</span>
+        </div>
+      </article>
+      <article class="life-card reveal" style="--d:.09s">
+        <div class="life-img"><img src="images/scene-yulin-pub.jpg" alt="玉林路" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">🏮 玉林路</span>
+          <h3 class="life-title">夜市小酒馆与炭火串串</h3>
+          <p class="life-desc">霓虹灯下的串串香、冰镇啤酒与成都夜生活，烟火气在这里最浓郁。</p>
+          <span class="life-note">📍 青羊区 · 夜晚更热闹</span>
+        </div>
+      </article>
+      <article class="life-card reveal" style="--d:.14s">
+        <div class="life-img"><img src="images/scene-chunxi-ifs.jpg" alt="春熙路" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">🛍️ 春熙路</span>
+          <h3 class="life-title">步行街与网红打卡地</h3>
+          <p class="life-desc">成都的商业心脏，购物、美食、街头表演，年轻活力在这里碰撞。</p>
+          <span class="life-note">📍 锦江区 · 全天适宜</span>
+        </div>
+      </article>
+      <article class="life-card reveal" style="--d:.19s">
+        <div class="life-img"><img src="images/scene-jinli.jpg" alt="锦里" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">🏮 锦里古街</span>
+          <h3 class="life-title">红墙灯笼与唐风夜景</h3>
+          <p class="life-desc">武侯祠旁的古街夜景，灯笼串起千年蜀风，手信小吃一条街。</p>
+          <span class="life-note">📍 武侯区 · 夜景最美</span>
+        </div>
+      </article>
+      <article class="life-card reveal" style="--d:.24s">
+        <div class="life-img"><img src="images/scene-kuanzhai.jpg" alt="宽窄巷子" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">☕ 宽窄巷子</span>
+          <h3 class="life-title">清代街道与慢时光</h3>
+          <p class="life-desc">宽的巷子喝茶、窄的巷子吃小吃，井的巷子则安静适合发呆。</p>
+          <span class="life-note">📍 青羊区 · 适合漫步</span>
+        </div>
+      </article>
+      <article class="life-card reveal" style="--d:.29s">
+        <div class="life-img"><img src="images/scene-wuhou-shrine.jpg" alt="武侯祠" loading="lazy"></div>
+        <div class="life-body">
+          <span class="life-chip">🏛️ 武侯祠</span>
+          <h3 class="life-title">三国文化与古柏幽径</h3>
+          <p class="life-desc">锦里外的文化地标，古柏掩映下的祠堂，历史感与市井气共存。</p>
+          <span class="life-note">📍 武侯区 · 需门票</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     组件 05：景点地图区（手绘 SVG 底图 + 10 个可点击标记 + 弹窗笔记卡）
+============================================================ -->
+<section class="section sec-spots" id="spots">
+  <span class="sec-sticker" aria-hidden="true">🗺️</span>
+  <div class="container">
+    <header class="sec-head reveal">
+      <span class="sec-tag"><i class="dot"></i>MAP · 景点地图</span>
+      <h2 class="sec-title">手绘成都寻宝图</h2>
+      <p class="sec-sub">局长用爪印标好了 10 个必逛点，点一点地图上的小标记，就能翻开普通大熊猫的私藏笔记。</p>
+    </header>
+    <div class="map-wrap reveal" style="--d:.1s">
+      <div class="map-stage" id="mapStage">
+        <svg class="map-svg" viewBox="0 0 800 520" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="6" y="6" width="788" height="508" rx="26" fill="#fffcf3" stroke="#ecd9bd" stroke-width="3"/>
+          <rect x="20" y="20" width="760" height="480" rx="18" fill="none" stroke="#f2e2c8" stroke-width="2" stroke-dasharray="10 8"/>
+          <path d="M24 216 L108 96 L192 216 Z" fill="#d9f2e4" stroke="#9ecfb4" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M104 216 L170 128 L238 216 Z" fill="#e9f8ee" stroke="#9ecfb4" stroke-width="3" stroke-linejoin="round"/>
+          <g stroke="#8ed3ab" stroke-width="4" stroke-linecap="round">
+            <path d="M688 52 v64 M714 58 v58 M664 64 v50"/>
+          </g>
+          <g fill="#8ed3ab">
+            <path d="M688 74 c-14 -8 -24 -4 -28 4 c12 6 22 2 28 -4 z"/>
+            <path d="M688 88 c12 -8 22 -4 26 4 c-12 6 -20 2 -26 -4 z"/>
+            <path d="M714 80 c-12 -8 -22 -4 -26 4 c12 6 20 2 26 -4 z"/>
+            <path d="M664 88 c12 -6 20 -2 24 4 c-12 6 -18 0 -24 -4 z"/>
+          </g>
+          <path d="M180 52 C270 120 300 210 380 280 C440 336 520 380 560 480" fill="none" stroke="#bfe0ff" stroke-width="14" stroke-linecap="round"/>
+          <path d="M180 52 C270 120 300 210 380 280 C440 336 520 380 560 480" fill="none" stroke="#eaf5ff" stroke-width="6" stroke-linecap="round"/>
+          <text x="322" y="248" class="map-river" transform="rotate(38 322 248)">· 锦 江 ·</text>
+          <path class="road" d="M40 302 C240 282 520 302 764 250"/>
+          <path class="road" d="M420 36 C430 200 470 340 470 492"/>
+          <path class="road" d="M56 432 C260 442 560 422 768 442"/>
+          <path class="road road-thin" d="M250 120 C300 220 340 320 350 420"/>
+          <path class="trip-line" d="M544 66 C520 140 428 184 464 262 C500 302 408 330 416 388 C422 424 432 434 440 450"/>
+          <path class="trip-line" d="M112 96 C94 150 84 190 80 210 C160 240 300 228 376 222"/>
+          <g class="compass">
+            <circle cx="70" cy="70" r="24" fill="#fffdf8" stroke="#e3c9a4" stroke-width="3"/>
+            <path d="M70 54 L80 80 L70 73 L60 80 Z" fill="#ff8fae"/>
+            <text x="70" y="46" class="map-en" text-anchor="middle">N</text>
+          </g>
+          <text x="400" y="506" class="map-water" text-anchor="middle">HAND-DRAWN CHENGDU MAP · BY PANDA BUREAU</text>
+        </svg>
+        <div class="map-layer" id="mapLayer"><!-- 景点标记由 JS 渲染 --></div>
+        <div class="map-popup" id="mapPopup" role="dialog" aria-label="景点笔记卡"><!-- JS 填充 --></div>
+      </div>
+      <ul class="map-legend reveal" style="--d:.2s" id="mapLegend"></ul>
+    </div>
+    <p class="map-tip reveal" style="--d:.15s">🐾 <b>局长小贴士：</b>地铁 3 号线直达熊猫基地；景区直通车可把上面的小红点挨个串起来，蜀道从此不难～</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     组件 06：美食手账区（点击翻牌：正面插画 + 背面局长攻略）
+============================================================ -->
+<section class="section sec-food" id="food">
+  <span class="sec-sticker" aria-hidden="true">🍢</span>
+  <div class="container">
+    <header class="sec-head reveal">
+      <span class="sec-tag"><i class="dot"></i>FOOD · 美食手账</span>
+      <h2 class="sec-title">舌尖上的马卡龙便签</h2>
+      <p class="sec-sub">点一下卡片翻个面，背面是局长的干饭攻略；辣度已用小辣椒标好，量力而行哦。</p>
+    </header>
+    <div class="food-grid">
+      <article class="food-card reveal" style="--d:.04s" tabindex="0" role="button" aria-pressed="false" aria-label="九宫格火锅，点击翻面看攻略">
+        <div class="food-inner">
+          <div class="food-face food-front">
+            <span class="tape t1" aria-hidden="true"></span><span class="tape t2" aria-hidden="true"></span>
+            <span class="food-illus" style="--illu:#ffe3d6">
+              <img src="images/food-hotpot.jpg" alt="" aria-hidden="true">
+            </span>
+            <h3 class="food-name">九宫格火锅</h3>
+            <p class="food-en">HOT POT · 毛肚七上八下</p>
+            <p class="food-tags"><span class="chip chip-hot">辣度 🌶️×5</span><span class="chip">社交神器</span></p>
+            <span class="food-fliphint">翻面看攻略 ↻</span>
+          </div>
+          <div class="food-face food-back">
+            <span class="tape t3" aria-hidden="true"></span>
+            <h3 class="food-back-title">局长干饭笔记 📝</h3>
+            <ul class="food-tips">
+              <li>📍 春熙路周边老字号牛油锅底</li>
+              <li>🥢 毛肚「七上八下」约 15 秒</li>
+              <li>🥤 唯怡豆奶解辣，是本地仪式感</li>
+            </ul>
+            <p class="food-price">人均 ¥90-120</p>
+            <span class="food-fliphint">再翻回来 ↺</span>
+          </div>
+        </div>
+      </article>
+      <article class="food-card reveal" style="--d:.09s" tabindex="0" role="button" aria-pressed="false" aria-label="串串香，点击翻面看攻略">
+        <div class="food-inner">
+          <div class="food-face food-front">
+            <span class="tape t2" aria-hidden="true"></span><span class="tape t3" aria-hidden="true"></span>
+            <span class="food-illus" style="--illu:#e7f7ed">
+              <img src="images/food-chuanchuan.jpg" alt="" aria-hidden="true">
+            </span>
+            <h3 class="food-name">串串香</h3>
+            <p class="food-en">SKEWERS · 签签快乐</p>
+            <p class="food-tags"><span class="chip chip-hot">辣度 🌶️×3</span><span class="chip">夜宵王者</span></p>
+            <span class="food-fliphint">翻面看攻略 ↻</span>
+          </div>
+          <div class="food-face food-back">
+            <span class="tape t1" aria-hidden="true"></span>
+            <h3 class="food-back-title">局长干饭笔记 📝</h3>
+            <ul class="food-tips">
+              <li>📍 玉林路串串一条街，慢慢选</li>
+              <li>🧮 结账数签签，越数越快乐</li>
+              <li>🧂 干碟 + 油碟，本地人双修</li>
+            </ul>
+            <p class="food-price">人均 ¥40-60</p>
+            <span class="food-fliphint">再翻回来 ↺</span>
+          </div>
+        </div>
+      </article>
+      <article class="food-card reveal" style="--d:.14s" tabindex="0" role="button" aria-pressed="false" aria-label="钵钵鸡，点击翻面看攻略">
+        <div class="food-inner">
+          <div class="food-face food-front">
+            <span class="tape t1" aria-hidden="true"></span><span class="tape t3" aria-hidden="true"></span>
+            <span class="food-illus" style="--illu:#e0f1ff">
+              <img src="images/food-boboji.jpg" alt="" aria-hidden="true">
+            </span>
+            <h3 class="food-name">钵钵鸡</h3>
+            <p class="food-en">BO BO CHICKEN · 冷吃开胃</p>
+            <p class="food-tags"><span class="chip chip-hot">辣度 🌶️×2</span><span class="chip">藤椒清香</span></p>
+            <span class="food-fliphint">翻面看攻略 ↻</span>
+          </div>
+          <div class="food-face food-back">
+            <span class="tape t2" aria-hidden="true"></span>
+            <h3 class="food-back-title">局长干饭笔记 📝</h3>
+            <ul class="food-tips">
+              <li>📍 乐山同款，红油 / 藤椒各一钵</li>
+              <li>🍗 鸡皮脆糯、去骨掌中宝必点</li>
+              <li>❄️ 冷串串冰镇过，夏天更上头</li>
+            </ul>
+            <p class="food-price">人均 ¥30-45</p>
+            <span class="food-fliphint">再翻回来 ↺</span>
+          </div>
+        </div>
+      </article>
+      <article class="food-card reveal" style="--d:.19s" tabindex="0" role="button" aria-pressed="false" aria-label="麻辣兔头，点击翻面看攻略">
+        <div class="food-inner">
+          <div class="food-face food-front">
+            <span class="tape t1" aria-hidden="true"></span><span class="tape t2" aria-hidden="true"></span>
+            <span class="food-illus" style="--illu:#fff0f5">
+              <img src="images/food-tutou.jpg" alt="" aria-hidden="true">
+            </span>
+            <h3 class="food-name">麻辣兔头</h3>
+            <p class="food-en">RABBIT HEAD · 胆量挑战</p>
+            <p class="food-tags"><span class="chip chip-hot">辣度 🌶️×4</span><span class="chip">冷吃更香</span></p>
+            <span class="food-fliphint">翻面看攻略 ↻</span>
+          </div>
+          <div class="food-face food-back">
+            <span class="tape t3" aria-hidden="true"></span>
+            <h3 class="food-back-title">局长干饭笔记 📝</h3>
+            <ul class="food-tips">
+              <li>📍 双流「老妈兔头」最出名</li>
+              <li>😋 先啃腮帮，再掰下巴嗦肉</li>
+              <li>🌟 怕辣选五香，温柔版也香</li>
+            </ul>
+            <p class="food-price">人均 ¥12-15 / 个</p>
+            <span class="food-fliphint">再翻回来 ↺</span>
+          </div>
+        </div>
+      </article>
+      <article class="food-card reveal" style="--d:.24s" tabindex="0" role="button" aria-pressed="false" aria-label="盖碗茶，点击翻面看攻略">
+        <div class="food-inner">
+          <div class="food-face food-front">
+            <span class="tape t2" aria-hidden="true"></span><span class="tape t3" aria-hidden="true"></span>
+            <span class="food-illus" style="--illu:#f5f1ff">
+              <img src="images/food-gaiwancha.jpg" alt="" aria-hidden="true">
+            </span>
+            <h3 class="food-name">盖碗茶</h3>
+            <p class="food-en">GAIWAN TEA · 慢生活</p>
+            <p class="food-tags"><span class="chip chip-mint">辣度 🌿×1</span><span class="chip">非遗采耳</span></p>
+            <span class="food-fliphint">翻面看攻略 ↻</span>
+          </div>
+          <div class="food-face food-back">
+            <span class="tape t1" aria-hidden="true"></span>
+            <h3 class="food-back-title">局长干饭笔记 📝</h3>
+            <ul class="food-tips">
+              <li>📍 人民公园鹤鸣茶社，竹椅首选</li>
+              <li>☀️ 十几块钱晒一下午太阳</li>
+              <li>👂 配一次采耳，舒服到眯眼</li>
+            </ul>
+            <p class="food-price">人均 ¥15-30</p>
+            <span class="food-fliphint">再翻回来 ↺</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     组件 06.5：成都印象 · 宣传影片（视频资源：images/chengdu-promo.mp4）
+============================================================ -->
+<section class="section sec-film" id="film">
+  <span class="sec-sticker" aria-hidden="true">🎬</span>
+  <div class="container">
+    <header class="sec-head reveal">
+      <span class="sec-tag"><i class="dot"></i>FILM · 宣传影片</span>
+      <h2 class="sec-title">Hello 成都 · 城市印象影片</h2>
+      <p class="sec-sub">30 多秒的成都小片：城市夜景、滚滚打盹、灯笼巷子和街头烟火，配上轻快的中文小调，一口气看完成都的可爱。</p>
+    </header>
+    <figure class="film-card reveal" style="--d:.08s">
+      <div class="film-screen">
+        <video class="film-video" id="filmVideo" src="images/chengdu-promo.mp4"
+               poster="images/chengdu-promo-poster.jpg" preload="metadata" playsinline loop></video>
+        <button class="film-play" id="filmPlay" type="button" aria-label="播放宣传影片" aria-pressed="false">
+          <i class="film-play-ico" aria-hidden="true">▶</i>
+          <span class="film-play-txt" id="filmPlayTxt">播放影片 · 33″</span>
+        </button>
+        <button class="film-mute" id="filmMute" type="button" aria-label="打开声音" title="打开声音">🔇</button>
+        <span class="film-badge" aria-hidden="true">PANDA TV</span>
+      </div>
+      <figcaption class="film-caption">
+        <div class="film-chips">
+          <span class="chip">🌆 城市夜景</span>
+          <span class="chip">🐼 滚滚日常</span>
+          <span class="chip">🏮 灯笼巷子</span>
+          <span class="chip">🍵 街头烟火</span>
+        </div>
+        <p class="film-note">素材来自 Mixkit 免费视频/配乐 · 默认静音播放，点右下角 🔇 开声音 · 点击画面播放 / 暂停</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     组件 11：页脚（品牌 + 快捷通道 + 局长叮嘱 + 爪印小路）
+============================================================ -->
+<footer class="footer">
+  <div class="container foot-grid">
+    <div class="foot-brand">
+      <span class="foot-logo"><img src="images/panda-head.svg" alt="" aria-hidden="true"></span>
+      <b>成都熊猫旅行局</b>
+      <p>一本会动的成都旅行手账。愿你的每次出发，都有竹叶味的 hello。</p>
+      <div class="foot-pills"><span>微信公众号</span><span>小红书</span><span>@成都熊猫局长</span></div>
+    </div>
+    <nav class="foot-col" aria-label="页脚导航">
+      <h4>快捷通道</h4>
+      <a href="#life">🏮 市井烟火</a>
+      <a href="#spots">🗺️ 景点地图</a>
+      <a href="#food">🍢 美食手账</a>
+      <a href="#film">🎬 宣传影片</a>
+    </nav>
+    <div class="foot-col">
+      <h4>局长叮嘱</h4>
+      <ul class="foot-list">
+        <li>🌶️ 微辣已是凡人上限，量力点单</li>
+        <li>🎟️ 熊猫基地记得提前订票</li>
+        <li>👟 一双好鞋，走遍九眼桥到巷子口</li>
+        <li>🍵 再赶，也要给自己留一个下午</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bar">
+    <div class="paw-trail" aria-hidden="true">
+      <svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg><svg viewBox="0 0 60 60"><use href="#kx-paw"/></svg>
+    </div>
+    <p>© 2026 成都熊猫旅行局 · 前端演示作品 · 图片素材 Wikimedia Commons（CC 授权）· 影片与配乐 Mixkit（个人使用授权）</p>
+  </div>
+</footer>
+
+<!-- 组件 12：回到顶部（熊猫翻滚） -->
+<button class="back-top" id="backTop" aria-label="回到顶部">
+  <span class="bt-panda"><img src="images/panda-head.svg" alt="" aria-hidden="true"></span>
+  <i class="bt-arrow" aria-hidden="true">↑</i>
+</button>
+
+<!-- 组件 13：全局轻提示 -->
+<div class="toast" id="toast" role="status"><span class="toast-ico" id="toastIco">🎉</span><span class="toast-text" id="toastText"></span></div>
+
+<!-- ============================================================
+     资源：内联小图标符号库（爪印 / 星星 / 蝴蝶结 / 爱心 · 依赖 CSS 变色故保留内联）
+     大型插画与照片已外置到 images/ 独立文件：panda-head.svg、cloud.svg、
+     leaf.svg、scene-*.jpg（10 张景点实拍照片 · Wikimedia Commons）、food-*.jpg（5 张美食实拍照片）
+============================================================ -->
+<svg class="svg-defs" width="0" height="0" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="kx-paw" viewBox="0 0 60 60"><ellipse cx="30" cy="40" rx="16" ry="12"/><ellipse cx="12" cy="24" rx="6" ry="8" transform="rotate(-15 12 24)"/><ellipse cx="24" cy="16" rx="6" ry="8"/><ellipse cx="38" cy="16" rx="6" ry="8"/><ellipse cx="49" cy="24" rx="6" ry="8" transform="rotate(15 49 24)"/></symbol>
+    <symbol id="kx-star" viewBox="0 0 24 24"><path d="M12 0 L15 9 L24 12 L15 15 L12 24 L9 15 L0 12 L9 9 Z"/></symbol>
+    <symbol id="kx-bow" viewBox="0 0 60 40"><path d="M28 20 C18 8 4 6 2 12 C4 22 16 28 28 26 Z"/><path d="M32 20 C42 8 56 6 58 12 C56 22 44 28 32 26 Z"/><circle cx="30" cy="21" r="6"/></symbol>
+    <symbol id="kx-heart" viewBox="0 0 32 30"><path d="M16 28 C8 22 2 16 2 9 A7 7 0 0 1 16 6 A7 7 0 0 1 30 9 C30 16 24 22 16 28 Z"/></symbol>
+  </defs>
+</svg>
+
+<script src="js/main.js"></script>
+</body>
+</html>
